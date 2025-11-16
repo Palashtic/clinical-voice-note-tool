@@ -119,10 +119,11 @@ document.getElementById("summaryBtn").addEventListener("click", async () => {
 
   try {
     const response = await fetch("https://clinical-voice-note-tool.vercel.app/api/summarize", {
-      method: "POST",
-      headers: { "Content-Typxfe": "application/json" },
-      body: JSON.stringify({ text: transcript }),
-    });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ transcript }),
+});
+
 
     const data = await response.json();
     summaryBox.value = data.summary || "Error: No summary returned.";
