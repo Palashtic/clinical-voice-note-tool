@@ -40,10 +40,13 @@ ${transcript}
       temperature: 0.2,
     });
 
-    const summary = completion.choices[0].message.content;
+    console.log("OpenAI completion:", completion);
+
+    const summary =
+      completion?.choices?.[0]?.message?.content?.trim() ||
+      "Error: No summary returned from OpenAI";
 
     res.status(200).json({ summary });
-
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ error: "Server error" });
