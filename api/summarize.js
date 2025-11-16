@@ -1,7 +1,8 @@
-import { Deepgram } from "@deepgram/sdk";
+import { createClient } from "@deepgram/sdk";
 
 export default async function handler(req, res) {
-    console.log("🔥 summarize API HIT", req.method);
+  console.log("🔥 summarize API HIT", req.method);
+
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not allowed" });
@@ -13,11 +14,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Transcript is empty" });
     }
 
-    const deepgram = new Deepgram(process.env.DEEPGRAM_API_KEY);
+    const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
-    // Use Deepgram Chat Completion for TEXT summarization
-    const response = await deepgram.chat.completions.create({
-      model: "gpt-4o-mini",   // Deepgram proxies OpenAI models
+    // Chat completion using Deepgram v3
+    const { data, error } = await deepgram.chat.completions.create({
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "user",
@@ -36,10 +37,15 @@ ${transcript}
         },
       ],
       max_tokens: 300,
-      temperature: 0.2
+      temperature: 0.2,
     });
 
-    const summary = response?.choices?.[0]?.message?.content;
+    if (error) {
+      console.error("Deepgram Chat Error:", error);
+      return res.status(500).json({ error: "Deepgram chat error" });
+    }
+
+    const summary = data?.choices?.[0]?.message?.content;
 
     if (!summary) {
       return res.status(500).json({ error: "No summary returned." });
