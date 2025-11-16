@@ -108,17 +108,18 @@ document.getElementById("download-summary").insertAdjacentHTML(
   `<button id="generate-summary">Generate AI Summary</button>`
 );
 
-document.getElementById("generate-summary").addEventListener("click", async () => {
-  const transcript = finalTranscript;
+document.getElementById("summaryBtn").addEventListener("click", async () => {
+  // Make sure finalTranscript exists
+  const transcript = typeof finalTranscript !== "undefined" ? finalTranscript : "";
 
-  if (!transcript.trim()) {
+  if (!transcript || !transcript.trim()) {
     alert("Transcript is empty!");
     return;
   }
 
   // Show loading state
   const summaryBox = document.getElementById("summary-text");
-  summaryBox.value = "Generating summary...\nPlease wait.";
+  summaryBox.value = "Generating summary...\nPlease wait...";
 
   try {
     const response = await fetch("https://clinical-voice-note-tool.vercel.app/api/summarize", {
@@ -127,15 +128,21 @@ document.getElementById("generate-summary").addEventListener("click", async () =
       body: JSON.stringify({ transcript }),
     });
 
+    if (!response.ok) {
+      summaryBox.value = `Server error: ${response.status}`;
+      return;
+    }
+
     const data = await response.json();
 
     if (data.summary) {
       summaryBox.value = data.summary;
     } else {
-      summaryBox.value = "Error creating summary.";
+      summaryBox.value = "Error: No summary returned from API.";
     }
   } catch (err) {
-    console.error(err);
+    console.error("Fetch error:", err);
     summaryBox.value = "Network error while generating summary.";
   }
 });
+

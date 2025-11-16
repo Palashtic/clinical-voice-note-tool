@@ -44,3 +44,16 @@ textarea {
   gap: 10px;
   flex-wrap: wrap;
 }
+#summaryBtn {
+    padding: 10px 16px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+#summaryBtn:hover {
+    background-color: #4338ca;
+}
