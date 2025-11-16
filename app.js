@@ -102,3 +102,40 @@ document.getElementById("download-transcript").addEventListener("click", () => {
   URL.revokeObjectURL(url);
 });
 // ----- Mock AI Summary Generator -----
+// ----- Generate Summary Using Serverless Function -----
+document.getElementById("download-summary").insertAdjacentHTML(
+  "beforebegin",
+  `<button id="generate-summary">Generate AI Summary</button>`
+);
+
+document.getElementById("generate-summary").addEventListener("click", async () => {
+  const transcript = finalTranscript;
+
+  if (!transcript.trim()) {
+    alert("Transcript is empty!");
+    return;
+  }
+
+  // Show loading state
+  const summaryBox = document.getElementById("summary-text");
+  summaryBox.value = "Generating summary...\nPlease wait.";
+
+  try {
+    const response = await fetch("https://clinical-voice-note-tool.vercel.app/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ transcript }),
+    });
+
+    const data = await response.json();
+
+    if (data.summary) {
+      summaryBox.value = data.summary;
+    } else {
+      summaryBox.value = "Error creating summary.";
+    }
+  } catch (err) {
+    console.error(err);
+    summaryBox.value = "Network error while generating summary.";
+  }
+});
