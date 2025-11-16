@@ -103,13 +103,10 @@ document.getElementById("download-transcript").addEventListener("click", () => {
 });
 // ----- Mock AI Summary Generator -----
 // ----- Generate Summary Using Serverless Function -----
-document.getElementById("download-summary").insertAdjacentHTML(
-  "beforebegin",
-  `<button id="generate-summary">Generate AI Summary</button>`
-);
 
 document.getElementById("summaryBtn").addEventListener("click", async () => {
   // Make sure finalTranscript exists
+  finalTranscript = document.getElementById("transcript-box").value;
   const transcript = typeof finalTranscript !== "undefined" ? finalTranscript : "";
 
   if (!transcript || !transcript.trim()) {
