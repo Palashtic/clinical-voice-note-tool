@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname))); // serve index.html etc
 
 // Load your Deepgram API key manually
-const DEEPGRAM_API_KEY = "YOUR_DEEPGRAM_API_KEY"; // <--- put new key here
+const DEEPGRAM_API_KEY = "066425b49c9a6068ba70d19c5d27d652aabcf482"; // <--- put new key here
 
 // API Route
 app.post("/api/summarize", async (req, res) => {
