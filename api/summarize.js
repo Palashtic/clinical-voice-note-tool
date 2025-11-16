@@ -9,15 +9,14 @@ export default async function handler(req, res) {
     }
 
     const { transcript } = req.body;
-
-    if (!transcript || transcript.trim() === "") {
+    if (!transcript?.trim()) {
       return res.status(400).json({ error: "Transcript is empty" });
     }
 
     const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
-    // CORRECT Deepgram v3.5.0 endpoint
-    const { data, error } = await deepgram.ai.completions.create({
+    // WORKS ONLY IN SDK 3.6+
+    const { data, error } = await deepgram.ai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
@@ -36,20 +35,15 @@ ${transcript}
           `,
         },
       ],
-      max_tokens: 300,
-      temperature: 0.2,
     });
 
     if (error) {
-      console.error("Deepgram Chat Error:", error);
+      console.error(error);
       return res.status(500).json({ error: "Deepgram chat error" });
     }
 
     const summary = data?.choices?.[0]?.message?.content;
-
-    if (!summary) {
-      return res.status(500).json({ error: "No summary returned." });
-    }
+    if (!summary) return res.status(500).json({ error: "No summary returned." });
 
     return res.status(200).json({ summary });
 

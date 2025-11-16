@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@deepgram/sdk": "^3.5.0"
+    "@deepgram/sdk": "^3.7.0"
   }
 }
