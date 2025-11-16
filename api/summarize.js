@@ -12,20 +12,33 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Transcript is empty" });
     }
 
-    // Initialize Deepgram client
     const deepgram = new Deepgram(process.env.DEEPGRAM_API_KEY);
 
-    // Deepgram Summarization
-    const response = await deepgram.summarize.transcript({
-      model: "nova-2",
-      text: transcript,
-      summary: {
-        type: "bullets",
-        length: "medium",
-      },
+    // Use Deepgram Chat Completion for TEXT summarization
+    const response = await deepgram.chat.completions.create({
+      model: "gpt-4o-mini",   // Deepgram proxies OpenAI models
+      messages: [
+        {
+          role: "user",
+          content: `
+Summarize the following clinical transcript into a structured medical note:
+- Encounter summary
+- Relevant vitals
+- Medications mentioned
+- Assessment & Plan
+- Handoff notes
+Keep it concise.
+
+Transcript:
+${transcript}
+          `,
+        },
+      ],
+      max_tokens: 300,
+      temperature: 0.2
     });
 
-    const summary = response?.output_text;
+    const summary = response?.choices?.[0]?.message?.content;
 
     if (!summary) {
       return res.status(500).json({ error: "No summary returned." });
