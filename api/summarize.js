@@ -14,11 +14,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Transcript is empty" });
     }
 
-    // Init correct Deepgram v3 client
     const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
-    // Using the NEW correct endpoint
-    const { data, error } = await deepgram.ai.chat.completions.create({
+    // CORRECT Deepgram v3.5.0 endpoint
+    const { data, error } = await deepgram.ai.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
