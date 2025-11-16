@@ -118,7 +118,7 @@ document.getElementById("summaryBtn").addEventListener("click", async () => {
   summaryBox.value = "Generating summary...\nPlease wait...";
 
   try {
-    const response = await fetch("https://clinical-voice-note-tool.vercel.app/api/summarize", {
+    const response = await fetch("/api/summarize", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ transcript }),
