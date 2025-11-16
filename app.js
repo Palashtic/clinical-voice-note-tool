@@ -105,16 +105,15 @@ document.getElementById("download-transcript").addEventListener("click", () => {
 // ----- Generate Summary Using Serverless Function -----
 
 document.getElementById("summaryBtn").addEventListener("click", async () => {
-  // Make sure finalTranscript exists
-  finalTranscript = document.getElementById("transcript-box").value;
-  const transcript = typeof finalTranscript !== "undefined" ? finalTranscript : "";
+  // Read transcript correctly (div has no .value)
+  finalTranscript = document.getElementById("transcript-box").textContent;
+  const transcript = finalTranscript.trim();
 
-  if (!transcript || !transcript.trim()) {
+  if (!transcript) {
     alert("Transcript is empty!");
     return;
   }
 
-  // Show loading state
   const summaryBox = document.getElementById("summary-text");
   summaryBox.value = "Generating summary...\nPlease wait...";
 
@@ -125,21 +124,11 @@ document.getElementById("summaryBtn").addEventListener("click", async () => {
       body: JSON.stringify({ transcript }),
     });
 
-    if (!response.ok) {
-      summaryBox.value = `Server error: ${response.status}`;
-      return;
-    }
-
     const data = await response.json();
-
-    if (data.summary) {
-      summaryBox.value = data.summary;
-    } else {
-      summaryBox.value = "Error: No summary returned from API.";
-    }
+    summaryBox.value = data.summary || "Error: No summary returned.";
   } catch (err) {
-    console.error("Fetch error:", err);
-    summaryBox.value = "Network error while generating summary.";
+    console.error(err);
+    summaryBox.value = "Network error.";
   }
 });
 
