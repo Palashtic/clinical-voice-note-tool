@@ -1,5 +1,19 @@
 {
   "dependencies": {
-    "@deepgram/sdk": "^3.7.0"
-  }
+    "@deepgram/sdk": "^3.13.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  },
+  "name": "clinical-voice-note-tool",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
