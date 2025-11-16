@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { Deepgram } from "@deepgram/sdk";
 
 export default async function handler(req, res) {
   try {
@@ -12,43 +12,29 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Transcript is empty" });
     }
 
-    const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    // Initialize Deepgram client
+    const deepgram = new Deepgram(process.env.DEEPGRAM_API_KEY);
+
+    // Deepgram Summarization
+    const response = await deepgram.summarize.transcript({
+      model: "nova-2",
+      text: transcript,
+      summary: {
+        type: "bullets",
+        length: "medium",
+      },
     });
 
-    const prompt = `
-You are a clinical documentation assistant.
+    const summary = response?.output_text;
 
-Convert the following clinician's spoken transcript into a structured, concise medical note.
+    if (!summary) {
+      return res.status(500).json({ error: "No summary returned." });
+    }
 
-Include:
-1. Summary of encounter
-2. Relevant vitals (if stated)
-3. Medications administered
-4. Assessment & Plan
-5. Handoff notes
+    return res.status(200).json({ summary });
 
-Avoid PHI. Keep it short and clean.
-
-Transcript:
-${transcript}
-    `;
-
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.2,
-    });
-
-    console.log("OpenAI completion:", completion);
-
-    const summary =
-      completion?.choices?.[0]?.message?.content?.trim() ||
-      "Error: No summary returned from OpenAI";
-
-    res.status(200).json({ summary });
   } catch (err) {
-    console.error("Error:", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Deepgram Error:", err);
+    return res.status(500).json({ error: "Server error" });
   }
 }

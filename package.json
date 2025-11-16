@@ -1,8 +1,5 @@
 {
-  "name": "clinical-voice-note-tool",
-  "version": "1.0.0",
-  "type": "module",
   "dependencies": {
-    "openai": "^4.28.0"
+    "@deepgram/sdk": "^3.5.0"
   }
 }
