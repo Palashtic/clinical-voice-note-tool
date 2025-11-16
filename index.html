@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice-to-Text Medical Notes</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Medical Voice Notes (Prototype)</h1>
+  </header>
+
+  <!-- Record Screen -->
+  <section id="screen-record" class="screen">
+    <h2>Record</h2>
+    <button id="btn-start-record">🎤 Start Recording</button>
+    <button id="btn-stop-record" disabled>⏹ Stop Recording</button>
+    <p id="record-status">Not recording</p>
+  </section>
+
+  <!-- Transcript Screen -->
+  <section id="screen-transcript" class="screen hidden">
+    <h2>Transcript</h2>
+    <div id="transcript-box">Transcript will appear here...</div>
+
+<div class="transcript-actions">
+  <button id="clear-transcript">Clear Transcript</button>
+  <button id="download-transcript">Download .txt</button>
+  <button id="goto-summary">Go to Summary →</button>
+</div>
+
+  </section>
+
+  <!-- Summary Screen -->
+  <section id="screen-summary" class="screen hidden">
+  <h2>Summary</h2>
+
+  <button id="generate-summary">✨ Generate Summary</button>
+
+  <textarea id="summary-text" placeholder="Summary will appear here..."></textarea>
+
+  <div style="margin-top: 12px;">
+    <button id="download-summary">Download Summary</button>
+    <button id="back-to-transcript">← Back to Transcript</button>
+  </div>
+</section>
+
+
+  <script src="app.js"></script>
+</body>
+</html>
